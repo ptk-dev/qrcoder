@@ -12,7 +12,7 @@ function convertRelativeToAbsolute(document) {
 
 function parseUrl(url) {
     if (url === "/") url = "index.html"
-    let bn = new URL(url, "https://qr-coder.web.app").href.replace("https://qr-coder.web.app", baseUrl)
+    let bn = new URL(url, "https://qr-coder.web.app/").href.replace("https://qr-coder.web.app/", baseUrl)
     return bn
 }
 
@@ -21,6 +21,19 @@ async function loadWebpage() {
     const source = await (await fetch(mainUrl)).text()
     const doc = new DOMParser().parseFromString(source, "text/html")
     convertRelativeToAbsolute(doc)
-    document.documentElement.replaceWith(doc.documentElement)
+    console.log(doc)
+    document.head.innerHTML = doc.head.innerHTML
+    document.body.innerHTML = doc.body.innerHTML
+    executeAllScripts()
 }
+function executeAllScripts() {
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach(script => {
+        const newScript = document.createElement('script');
+        newScript.textContent = script.textContent;
+
+        script.parentNode.replaceChild(newScript, script);
+    });
+}
+
 window.addEventListener('load', loadWebpage);
