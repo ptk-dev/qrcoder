@@ -98,6 +98,7 @@ function adjustHTMLFile(fp) {
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
     writeFileRecursive(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "") + ".txt"), html, "utf-8")
+    writeFileRecursive(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "")), html, "utf-8")
 }
 
 
