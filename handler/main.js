@@ -5,6 +5,7 @@ const replaceAll = require("replaceall")
 
 const INPUT_FOLDER = path.join(__dirname, "../website")
 const OUTPUT_FOLDER = path.join(__dirname, "../public")
+const HOSTED_PATH = "https://raw.githubusercontent.com/ptk-dev/qr-coder-hosting-folder/main/public/"
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     const files = fs.readdirSync(directoryPath);
@@ -24,16 +25,25 @@ function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     return { htmlArray, fileArray };
 }
 
-function convertRelativePathWithAbsolute(path="") {
-    if (path.startsWith("http")) return path
+function convertRelativePathWithAbsolute(_path = "", filePath = "") {
+    console.log(_path)
+    if (_path.startsWith("http")) return _path
 
-    if (path.startsWith("/")) return `./${replace()}`
+    if (_path === "/") {
+        return HOSTED_PATH
+    }
+
+    if (_path.startsWith("/")) {
+        return HOSTED_PATH + "/" +_path
+    }
+    return _path
 }
 
-function adjustHTMLFile(fp = "C:\\Users\\hp\\Documents\\GitHub\\qr-coder-hosting-folder\\website\\index.html") {
+function adjustHTMLFile(fp = path.join(INPUT_FOLDER, "blog/the-qr-code-generator-vs-qr-code-generator-pro-which-is-a-better-solution-for-you.html")) {
     let source = fs.readFileSync(fp, "utf-8")
     let window = new JSDOM(source).window
     let document = window.document
+    let filePath = fp.replace(INPUT_FOLDER, "")
 
     // remove preloads
     let preloads = [...document.querySelectorAll("[rel=preload]")]
@@ -47,15 +57,19 @@ function adjustHTMLFile(fp = "C:\\Users\\hp\\Documents\\GitHub\\qr-coder-hosting
 
     // next generated error fix
     document.documentElement.innerHTML = replaceAll(`\`"`, ";\"", document.documentElement.innerHTML)
-    
+
     // replace 'http://localhost:3000' links with hosted path
     document.documentElement.innerHTML = replaceAll(`http://localhost:3000`, "", document.documentElement.innerHTML)
 
-    // replace relative root with absolute root of scripts 
-    let scriptTags = [...document.querySelectorAll("script")]
-    scriptTags.map(x=> {
+    // replace relative root with absolute root of scripts and links
+    let scriptAndLinkTags = [...document.querySelectorAll("script"), ...document.querySelectorAll("link")]
+    scriptAndLinkTags.map(x => {
         if (x.hasAttribute("src")) {
-            x.src = convertRelativePathWithAbsolute(x.src)
+            x.src = convertRelativePathWithAbsolute(x.src, filePath)
+        }
+
+        if (x.hasAttribute("href")) {
+            x.href = convertRelativePathWithAbsolute(x.href, filePath)
         }
     })
 
@@ -63,6 +77,6 @@ function adjustHTMLFile(fp = "C:\\Users\\hp\\Documents\\GitHub\\qr-coder-hosting
 
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
-    fs.writeFileSync(path.join(__dirname, "..", "public", "index.html"), html, "utf-8")
+    fs.writeFileSync(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "")), html, "utf-8")
 }
 adjustHTMLFile()
