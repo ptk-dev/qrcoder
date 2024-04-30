@@ -111,3 +111,10 @@ if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER)
 for (let file of htmlArray) {
     adjustHTMLFile(file)
 }
+for (let file of fileArray) {
+    writeFileRecursive(
+        path.join(__dirname, "..", "public", file.replace(INPUT_FOLDER, "")),
+        fs.readFileSync(file, "binary"),
+        "binary"
+    )
+}
