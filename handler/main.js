@@ -26,7 +26,6 @@ function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
 }
 
 function convertRelativePathWithAbsolute(_path = "", filePath = "") {
-    console.log(_path)
     if (_path.startsWith("http")) return _path
 
     if (_path === "/") {
