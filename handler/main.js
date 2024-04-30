@@ -2,10 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom')
 const replaceAll = require("replaceall")
+const { rimrafSync } = require("rimraf")
 
 const INPUT_FOLDER = path.join(__dirname, "../website")
 const OUTPUT_FOLDER = path.join(__dirname, "../public")
-const HOSTED_PATH = "https://raw.githubusercontent.com/ptk-dev/qr-coder-hosting-folder/main/public/"
+const HOSTED_PATH = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/website/"
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     const files = fs.readdirSync(directoryPath);
@@ -33,12 +34,32 @@ function convertRelativePathWithAbsolute(_path = "", filePath = "") {
     }
 
     if (_path.startsWith("/")) {
-        return HOSTED_PATH + "/" +_path
+        return HOSTED_PATH + "/" + _path
     }
     return _path
 }
 
-function adjustHTMLFile(fp = path.join(INPUT_FOLDER, "blog/the-qr-code-generator-vs-qr-code-generator-pro-which-is-a-better-solution-for-you.html")) {
+async function writeFileRecursive(filePath, data, encoding = 'utf8') {
+    const dirPath = path.dirname(filePath);
+
+    try {
+        fs.accessSync(dirPath, fs.constants.F_OK);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            fs.mkdirSync(dirPath, { recursive: true });
+        } else {
+            throw err;
+        }
+    }
+
+    try {
+        fs.writeFileSync(filePath, data, encoding);
+    } catch (err) {
+        throw err;
+    }
+}
+
+function adjustHTMLFile(fp) {
     let source = fs.readFileSync(fp, "utf-8")
     let window = new JSDOM(source).window
     let document = window.document
@@ -76,6 +97,16 @@ function adjustHTMLFile(fp = path.join(INPUT_FOLDER, "blog/the-qr-code-generator
 
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
-    fs.writeFileSync(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "")), html, "utf-8")
+    writeFileRecursive(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "") + ".txt"), html, "utf-8")
 }
-adjustHTMLFile()
+
+
+const { htmlArray, fileArray } = crawlDirectory(INPUT_FOLDER)
+
+// clean the target directory
+rimrafSync(OUTPUT_FOLDER)
+if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER)
+
+for (let file of htmlArray) {
+    adjustHTMLFile(file)
+}

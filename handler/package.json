@@ -9,6 +9,7 @@
   "author": "Ptk",
   "license": "ISC",
   "dependencies": {
-    "replaceall": "^0.1.6"
+    "replaceall": "^0.1.6",
+    "rimraf": "^5.0.5"
   }
 }
