@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<script>
+  (async () => {
+    let BASEPATH =
+      "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/web";
+
+    let location =
+      BASEPATH +
+      (window.location.pathname === "/"
+        ? "/index.html"
+        : window.location.pathname);
+
+    let source = await (await fetch(location)).text();
+    let dom = new DOMParser().parseFromString(source, "text/html")
+    console.log()
+    document.documentElement.replaceWith(dom.documentElement);
+  })();
+</script>

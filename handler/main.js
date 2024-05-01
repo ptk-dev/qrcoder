@@ -3,6 +3,7 @@ const path = require('path');
 const { JSDOM } = require('jsdom')
 const replaceAll = require("replaceall")
 const { rimrafSync } = require("rimraf")
+const { URL } = require("url")
 
 const INPUT_FOLDER = path.join(__dirname, "../in")
 const OUTPUT_FOLDER = path.join(__dirname, "../web")
@@ -33,8 +34,13 @@ function convertRelativePathWithAbsolute(_path = "", filePath = "") {
         return HOSTED_PATH
     }
 
+
+    if (_path.startsWith("./")) {
+        return new URL(HOSTED_PATH + (() => { let fp = filePath.split("/"); fp.pop(); return fp.join("/") })() + _path).href
+    }
+
     if (_path.startsWith("/")) {
-        return HOSTED_PATH + "/" + _path
+        return new URL(HOSTED_PATH + "/" + _path).href
     }
     return _path
 }
@@ -95,7 +101,6 @@ function adjustHTMLFile(fp) {
 
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
-    writeFileRecursive(path.join(OUTPUT_FOLDER, fp.replace(INPUT_FOLDER, "") + ".txt"), html, "utf-8")
     writeFileRecursive(path.join(OUTPUT_FOLDER, fp.replace(INPUT_FOLDER, "")), html, "utf-8")
 }
 
