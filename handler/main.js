@@ -27,6 +27,16 @@ function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     return { htmlArray, fileArray };
 }
 
+function normalizePath(path) {
+    path = path.replace(/\/\/+/g, "//");
+
+    if (!path.endsWith(".html") && !path.endsWith(".htm")) {
+        path = path.replace(/\/$/, "");
+    }
+
+    return path;
+}
+
 function convertRelativePathWithAbsolute(_path = "", filePath = "") {
     if (_path.startsWith("http")) return _path
 
@@ -91,11 +101,11 @@ function adjustHTMLFile(fp) {
     let scriptAndLinkAndImgTags = [...document.querySelectorAll("script"), ...document.querySelectorAll("link"), ...document.querySelectorAll("img")]
     scriptAndLinkAndImgTags.map(x => {
         if (x.hasAttribute("src")) {
-            x.src = convertRelativePathWithAbsolute(x.src, filePath)
+            x.src = normalizePath(convertRelativePathWithAbsolute(x.src, filePath))
         }
 
         if (x.hasAttribute("href")) {
-            x.href = convertRelativePathWithAbsolute(x.href, filePath)
+            x.href = normalizePath(convertRelativePathWithAbsolute(x.href, filePath))
         }
     })
 
