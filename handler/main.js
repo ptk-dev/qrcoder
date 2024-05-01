@@ -117,11 +117,11 @@ function adjustHTMLFile(fp) {
     /****** generate hostable files ******/
 
     /** init **/
-    const scrips = [...([...document.querySelectorAll("script")].map(x => { x.remove(); return { type: x.type, src: x.src, script: x.innerHTML } }))]
+    const scripts = [...([...document.querySelectorAll("script")].map(x => { x.remove(); return { type: x.type, src: x.src, script: x.innerHTML } }))]
 
     const final = {
         body: document.body.innerHTML,
-        scrips
+        scripts
     }
     return {
         json: final,

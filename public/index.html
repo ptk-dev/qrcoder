@@ -10,11 +10,9 @@
         ? "/index.html"
         : window.location.pathname);
 
-    let source = await (await fetch(location, {cache: "no-cache"})).text();
-    let dom = new DOMParser().parseFromString(source, "text/html")
-
-    console.log(dom.head)
-    document.head.innerHTML = dom.head.innerHTML
-    document.body = dom.body
+    location += ".json"
+    let {body,scripts} = await (await fetch(location, {cache: "no-cache"})).json();
+    console.log(source)
+    document.body = source.body
 })();
 </script>
