@@ -6,7 +6,7 @@ const { rimrafSync } = require("rimraf")
 
 const INPUT_FOLDER = path.join(__dirname, "../in")
 const OUTPUT_FOLDER = path.join(__dirname, "../web")
-const HOSTED_PATH = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/out/"
+const HOSTED_PATH = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/web/"
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     const files = fs.readdirSync(directoryPath);
