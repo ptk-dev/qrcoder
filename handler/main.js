@@ -4,9 +4,9 @@ const { JSDOM } = require('jsdom')
 const replaceAll = require("replaceall")
 const { rimrafSync } = require("rimraf")
 
-const INPUT_FOLDER = path.join(__dirname, "../website")
-const OUTPUT_FOLDER = path.join(__dirname, "../public")
-const HOSTED_PATH = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/website/"
+const INPUT_FOLDER = path.join(__dirname, "../in")
+const OUTPUT_FOLDER = path.join(__dirname, "../web")
+const HOSTED_PATH = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/out/"
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
     const files = fs.readdirSync(directoryPath);
@@ -81,9 +81,9 @@ function adjustHTMLFile(fp) {
     // replace 'http://localhost:3000' links with hosted path
     document.documentElement.innerHTML = replaceAll(`http://localhost:3000`, "", document.documentElement.innerHTML)
 
-    // replace relative root with absolute root of scripts and links
-    let scriptAndLinkTags = [...document.querySelectorAll("script"), ...document.querySelectorAll("link")]
-    scriptAndLinkTags.map(x => {
+    // replace relative root with absolute root of scripts and links and images
+    let scriptAndLinkAndImgTags = [...document.querySelectorAll("script"), ...document.querySelectorAll("link"), ...document.querySelectorAll("img")]
+    scriptAndLinkAndImgTags.map(x => {
         if (x.hasAttribute("src")) {
             x.src = convertRelativePathWithAbsolute(x.src, filePath)
         }
@@ -93,12 +93,10 @@ function adjustHTMLFile(fp) {
         }
     })
 
-
-
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
-    writeFileRecursive(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "") + ".txt"), html, "utf-8")
-    writeFileRecursive(path.join(__dirname, "..", "public", fp.replace(INPUT_FOLDER, "")), html, "utf-8")
+    writeFileRecursive(path.join(OUTPUT_FOLDER, fp.replace(INPUT_FOLDER, "") + ".txt"), html, "utf-8")
+    writeFileRecursive(path.join(OUTPUT_FOLDER, fp.replace(INPUT_FOLDER, "")), html, "utf-8")
 }
 
 
@@ -113,7 +111,7 @@ for (let file of htmlArray) {
 }
 for (let file of fileArray) {
     writeFileRecursive(
-        path.join(__dirname, "..", "public", file.replace(INPUT_FOLDER, "")),
+        path.join(OUTPUT_FOLDER, file.replace(INPUT_FOLDER, "")),
         fs.readFileSync(file, "binary"),
         "binary"
     )
