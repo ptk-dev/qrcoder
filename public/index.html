@@ -10,9 +10,11 @@
         ? "/index.html"
         : window.location.pathname);
 
-    let source = await (await fetch(location)).text();
+    let source = await (await fetch(location, {cache: "no-cache"})).text();
     let dom = new DOMParser().parseFromString(source, "text/html")
-    console.log()
-    document.documentElement.replaceWith(dom.documentElement);
-  })();
+
+    console.log(dom.head)
+    document.head.innerHTML = dom.head.innerHTML
+    document.body = dom.body
+})();
 </script>

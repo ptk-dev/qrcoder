@@ -89,9 +89,9 @@ function adjustHTMLFile(fp) {
 
     // bundle distributed styles
     let styleTags = [...document.querySelectorAll("style")]
-    let styles = ''
-    styleTags.map(x => { styles += x.innerHTML; x.remove() })
-    document.head.innerHTML += `<style>${styles}</style>`
+    let style = ''
+    styleTags.map(x => { style += x.innerHTML; x.remove() })
+    document.head.innerHTML += `<style>${style}</style>`
 
     // next generated error fix
     document.documentElement.innerHTML = replaceAll(`\`"`, ";\"", document.documentElement.innerHTML)
@@ -104,18 +104,29 @@ function adjustHTMLFile(fp) {
     scriptAndLinkAndImgTags.map(x => {
         if (x.hasAttribute("src")) {
             x.src = normalizePath(convertRelativePathWithAbsolute(x.src, filePath))
-            console.log(x.src)
         }
 
         if (x.hasAttribute("href")) {
             x.href = normalizePath(convertRelativePathWithAbsolute(x.href, filePath))
-            console.log(x.href)
         }
     })
 
     // export into target folder
     let html = `<!DOCTYPE html><html>${document.documentElement.innerHTML}</html>`
-    writeFileRecursive(path.join(OUTPUT_FOLDER, fp.replace(INPUT_FOLDER, "")), html, "utf-8")
+
+    /****** generate hostable files ******/
+
+    /** init **/
+    const scrips = [...([...document.querySelectorAll("script")].map(x => { x.remove(); return { type: x.type, src: x.src, script: x.innerHTML } }))]
+
+    const final = {
+        body: document.body.innerHTML,
+        scrips
+    }
+    return {
+        json: final,
+        html
+    }
 }
 
 
@@ -126,7 +137,10 @@ rimrafSync(OUTPUT_FOLDER)
 if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER)
 
 for (let file of htmlArray) {
-    adjustHTMLFile(file)
+    let { html, json } = adjustHTMLFile(file)
+    writeFileRecursive(path.join(OUTPUT_FOLDER, file.replace(INPUT_FOLDER, "")), html, "utf-8")
+    writeFileRecursive(path.join(OUTPUT_FOLDER, file.replace(INPUT_FOLDER, "") + '.json'), JSON.stringify(json), "utf-8")
+
 }
 for (let file of fileArray) {
     writeFileRecursive(
