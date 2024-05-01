@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <script>
   (async () => {
     let BASEPATH =
@@ -10,7 +11,6 @@
         : window.location.pathname);
 
     let source = await (await fetch(location)).text();
-    document.documentElement.innerHTML += source;
+    document.documentElement.innerHTML = source;
   })();
 </script>
-hello
