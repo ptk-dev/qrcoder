@@ -9,7 +9,7 @@ const INPUT_FOLDER = path.join(__dirname, "../in");
 const OUTPUT_FOLDER = path.join(__dirname, "../web");
 const PUBLIC_FOLDER = path.join(__dirname, "../public");
 const HOSTED_PATH =
-  "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/web/";
+  "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder/web/";
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
   const files = fs.readdirSync(directoryPath);
