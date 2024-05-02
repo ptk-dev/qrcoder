@@ -39,7 +39,7 @@ function normalizePath(path) {
 
   const parts = path.split(/\//).filter((part) => part);
 
-  return parts.join("/");
+  return parts.join("/").replace("https:/", "https://");
 }
 
 function convertRelativePathWithAbsolute(_path = "", filePath = "") {
