@@ -177,3 +177,10 @@ for (let file of fileArray) {
     source ? "utf-8" : "binary"
   );
 }
+
+
+let files = [...htmlArray, ...(fileArray.filter(x=> x.endsWith(".js")))]
+
+files = files.map(x=> path.normalize(x.replace(INPUT_FOLDER, HOSTED_PATH)).replaceAll("\\", "/"))
+
+fs.writeFileSync("files.txt", files.join`\n`, "utf8")
