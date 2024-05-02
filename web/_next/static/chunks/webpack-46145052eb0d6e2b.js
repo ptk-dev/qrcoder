@@ -113,7 +113,7 @@
       );
     }),
     (s.u = function (e) {
-      return "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/web/_next/static/chunks/" + e + ".aa3d7388766994ba.js";
+      return "static/chunks/" + e + ".aa3d7388766994ba.js";
     }),
     (s.miniCssF = function (e) {}),
     (s.g = (function () {
@@ -202,7 +202,7 @@
     (s.tu = function (e) {
       return s.tt().createScriptURL(e);
     }),
-    (s.p = "/_next/"),
+    (s.p = "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@main/web/_next/"),
     (i = { 272: 0, 382: 0, 150: 0 }),
     (s.f.j = function (e, t) {
       var n = s.o(i, e) ? i[e] : void 0;
