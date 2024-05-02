@@ -132,6 +132,11 @@ function adjustHTMLFile(fp) {
 
 const { htmlArray, fileArray } = crawlDirectory(INPUT_FOLDER)
 
+function adjustWebPackFile(fp) {
+    let source = fs.readFileSync(fp, "utf-8")
+    source = source.replace("static/chunks/", HOSTED_PATH + "_next/static/chunks/")
+}
+
 // clean the target directory
 rimrafSync(OUTPUT_FOLDER)
 if (!fs.existsSync(OUTPUT_FOLDER)) fs.mkdirSync(OUTPUT_FOLDER)
