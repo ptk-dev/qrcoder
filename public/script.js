@@ -1,6 +1,6 @@
 (async () => {
   let BASEPATH =
-    "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder/web";
+    "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@latest/web";
   let location =
     BASEPATH +
     (window.location.pathname === "/"
