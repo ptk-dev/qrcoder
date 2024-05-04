@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "jsdom": "^24.0.0"
+  },
+  "scripts": {
+    "build": "cd handler && npm start"
   }
 }

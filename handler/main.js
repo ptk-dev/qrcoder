@@ -5,11 +5,11 @@ const replaceAll = require("replaceall");
 const { rimrafSync } = require("rimraf");
 const { URL } = require("url");
 
-const INPUT_FOLDER = path.join(__dirname, "../in");
+const INPUT_FOLDER = path.join(__dirname, "../out");
 const OUTPUT_FOLDER = path.join(__dirname, "../web");
 const PUBLIC_FOLDER = path.join(__dirname, "../public");
 const HOSTED_PATH =
-  "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@latest/web/";
+  "https://cdn.jsdelivr.net/gh/ptk-dev/qr-coder-hosting-folder@prod/web/";
 
 function crawlDirectory(directoryPath, htmlArray = [], fileArray = []) {
   const files = fs.readdirSync(directoryPath);
