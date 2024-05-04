@@ -52,12 +52,12 @@ function convertRelativePathWithAbsolute(_path = "", filePath = "") {
   if (_path.startsWith("./")) {
     return new URL(
       HOSTED_PATH +
-        (() => {
-          let fp = filePath.split("/");
-          fp.pop();
-          return fp.join("/");
-        })() +
-        _path
+      (() => {
+        let fp = filePath.split("/");
+        fp.pop();
+        return fp.join("/");
+      })() +
+      _path
     ).href;
   }
 
@@ -179,8 +179,12 @@ for (let file of fileArray) {
 }
 
 
-let files = [...htmlArray, ...(fileArray.filter(x=> x.endsWith(".js")))]
+let files = [...htmlArray, ...(fileArray.filter(x => x.endsWith(".js")))]
 
-files = files.map(x=> path.normalize(x.replace(INPUT_FOLDER, HOSTED_PATH)).replaceAll("\\", "/"))
+files = files.map(x => path.normalize(x.replace(INPUT_FOLDER, HOSTED_PATH)).replaceAll("\\", "/"))
 
-fs.writeFileSync("files.txt", files.join`\n`, "utf8")
+fs.writeFileSync("files.txt", files.join(`\n`), "utf8")
+
+let htmls = htmlArray.map(x=> x.replace(INPUT_FOLDER, "https://qr-coder.web.app").replaceAll("\\", "/"))
+
+writeFileRecursive(path.join(PUBLIC_FOLDER, "sitemap.txt"), htmls.join(`\n`), "utf-8")
