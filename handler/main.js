@@ -46,7 +46,7 @@ function convertRelativePathWithAbsolute(_path = "", filePath = "") {
   if (_path.startsWith("http")) return _path;
 
   if (_path === "/") {
-    return HOSTED_PATH;
+    return "/";
   }
 
   if (_path.startsWith("./")) {
