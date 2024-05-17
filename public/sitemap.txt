@@ -3,3 +3,4 @@ https://qr-coder.web.app/about.html
 https://qr-coder.web.app/blog/the-qr-code-generator-vs-qr-code-generator-pro-which-is-a-better-solution-for-you.html
 https://qr-coder.web.app/contact.html
 https://qr-coder.web.app/index.html
+https://qr-coder.web.app/blog.html
